@@ -7,5 +7,5 @@ Latest version of Deep Graph Library
 
 # Usage
 ```
-python train_ppo --data-dir $DATA_DIR --device $GPU_ID
+python train_ppo.py --data-dir $DATA_DIR --device $GPU_ID
 ```
