@@ -79,6 +79,7 @@ class ProxPolicyOptimFramework(object):
             stacked_diff = torch.stack(
                 [diff, clamped_diff], dim = 2
                 )
+            g = g.to(self.device)
             g.ndata['h'] = stacked_diff.permute(1, 0, 2) 
             h = dgl.sum_nodes(g, 'h').permute(1, 0, 2)
             g.ndata.pop('h')
@@ -108,9 +109,12 @@ class ProxPolicyOptimFramework(object):
                 )
             self.optimizer.step()
             
-            avg_actor_loss += actor_loss.detach() 
-            avg_critic_loss += critic_loss.detach() 
-            avg_entropy += entropy.detach()
+            # avg_actor_loss += actor_loss.detach()
+            # avg_critic_loss += critic_loss.detach()
+            # avg_entropy += entropy.detach()
+            avg_actor_loss += actor_loss.to("cpu")
+            avg_critic_loss += critic_loss.to("cpu")
+            avg_entropy += entropy.to("cpu")
             cnt += 1
             torch.cuda.empty_cache()
 

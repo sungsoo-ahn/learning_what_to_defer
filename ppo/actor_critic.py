@@ -33,7 +33,8 @@ class ActorCritic(nn.Module):
         # num_subg_nodes * batch_size
         subg_node_mask = node_mask.index_select(0, flatten_subg_idxs)
         flatten_subg_node_idxs = subg_node_mask.view(-1).nonzero().squeeze(1)
-        
+
+        g = g.to(self.device)
         subg = g.subgraph(flatten_subg_idxs)
         
         # num_subg_nodes * batch_size * feature_dim
@@ -133,6 +134,7 @@ class ActorCritic(nn.Module):
             .index_select(0, flatten_subg_node_idxs)
             )
 
+        g = g.to(self.device)
         g.ndata['h'] = node_value_preds.view(-1, batch_size)
         value_pred = dgl.sum_nodes(g, 'h') / self.max_num_nodes
         g.ndata.pop('h')
@@ -192,6 +194,7 @@ class ActorCritic(nn.Module):
             .index_select(0, flatten_subg_node_idxs)
             )
 
+        g = g.to(self.device)
         g.ndata['h'] = node_value_preds.view(num_nodes, batch_size)
         value_preds = dgl.sum_nodes(g, 'h') / self.max_num_nodes
         g.ndata.pop('h')

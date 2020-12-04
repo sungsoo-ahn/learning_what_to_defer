@@ -36,6 +36,7 @@ class MaximumIndependentSetEnv(object):
         self.t += 1
         
         x1 = (self.x == 1)
+        self.g = self.g.to(self.device)
         self.g.ndata['h'] = x1.float()
         self.g.update_all(
             fn.copy_src(src='h', out='m'), 
@@ -107,7 +108,7 @@ class MaximumIndependentSetEnv(object):
         self.g.set_n_initializer(dgl.init.zero_initializer)
         self.g.to(self.device)
         self.batch_num_nodes = torch.LongTensor(
-            self.g.batch_num_nodes
+            self.g.batch_num_nodes()
             ).to(self.device)
         
         num_nodes = self.g.number_of_nodes()
